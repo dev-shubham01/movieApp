@@ -46,6 +46,9 @@ export default function HomePage() {
     const url = buildApiUrl(searchValue, 1);
     fetchMovies(url);
 
+    // Reset to movies list if we're currently viewing favorites
+    setShowFavorites(false);
+
     window.scrollTo({
       top: 0,
       behavior: 'smooth',

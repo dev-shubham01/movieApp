@@ -14,7 +14,7 @@ const FavouriteMovies = ({ favoriteMovies, onFavoriteClick }) => {
           favoriteMovies={favoriteMovies}
         />
       ) : (
-        <p className={styles.noFavorites}>You have no favorite movies yet.</p>
+        <div className={styles.noFavorites}>You have no favorite movies yet.</div>
       )}
     </div>
   );
