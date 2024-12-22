@@ -1,0 +1,38 @@
+.homePage{
+display: flex;
+flex-direction: column;
+}
+.buttonSection {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  
+  .toggleButton {
+    padding: 10px 20px;
+    border: none;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  
+  .toggleButton.active {
+    background-color: #e62429;
+    color: white;
+  }
+  
+  .toggleButton:hover {
+    background-color: #c0191f;
+    color: white;
+  }
+  
+  .buttonSection{
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  

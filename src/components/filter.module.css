@@ -1,0 +1,19 @@
+.filters {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .filters select,
+  .filters input {
+    padding: 8px;
+    font-size: 14px;
+    margin: 5px 0;
+  }
+  
+  .year-range,
+  .rating-range {
+    display: flex;
+    gap: 10px;
+  }
+  
