@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import Skeleton from '@mui/material/Skeleton';
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import styles from './moviecard.module.css';
 
@@ -30,17 +30,24 @@ const releaseYear = new Date(movie.release_date).getFullYear();
     <>
       {isLoading ? (
         <div className={styles.cards}>
-          {/* Skeleton loader with animation */}
-          <SkeletonTheme baseColor="#b3b3b3" highlightColor="#fcfafa" duration={1.5}>
-  <Skeleton height={300} />
-</SkeletonTheme>
+      
+      <Skeleton
+  variant="rectangular"
+  width={200}
+  height={300}
+  animation="wave"
+  sx={{ bgcolor: '#D0D0D0' }}
+  duration={1.5}
+/>
+
 
         </div>
+        
       ) : (
         <div
           className={styles.cards}
-          onMouseEnter={() => setIsHovered(true)} // Set hover state on mouse enter
-          onMouseLeave={() => setIsHovered(false)} // Remove hover state on mouse leave
+          onMouseEnter={() => setIsHovered(true)} 
+          onMouseLeave={() => setIsHovered(false)} 
         >
           {/* Image */}
           <img

@@ -16,6 +16,14 @@ export default function HomePage() {
   const API_KEY = 'api_key=1cf50e6248dc270629e802686245c2c8';
   const BASE_URL = 'https://api.themoviedb.org/3';
 
+  // Load favorite movies from local storage on initial render
+  useEffect(() => {
+    const savedFavorites = localStorage.getItem('favoriteMovies');
+    if (savedFavorites) {
+      setFavoriteMovies(JSON.parse(savedFavorites));
+    }
+  }, []);
+
   const fetchMovies = useCallback(async (url, append = false) => {
     try {
       setIsLoading(true);
@@ -83,11 +91,15 @@ export default function HomePage() {
   const handleFavoriteClick = (movie) => {
     setFavoriteMovies((prev) => {
       const isFavorite = prev.some((fav) => fav.id === movie.id);
+      let updatedFavorites;
       if (isFavorite) {
-        return prev.filter((fav) => fav.id !== movie.id);
+        updatedFavorites = prev.filter((fav) => fav.id !== movie.id);
       } else {
-        return [...prev, movie];
+        updatedFavorites = [...prev, movie];
       }
+      // Save updated favorites to local storage
+      localStorage.setItem('favoriteMovies', JSON.stringify(updatedFavorites));
+      return updatedFavorites;
     });
   };
 
