@@ -36,7 +36,7 @@ const releaseYear = new Date(movie.release_date).getFullYear();
   width={200}
   height={300}
   animation="wave"
-  sx={{ bgcolor: '#D0D0D0' }}
+  sx={{ bgcolor: '#808080' }}
   duration={1.5}
 />
 
