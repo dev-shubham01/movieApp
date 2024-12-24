@@ -3,6 +3,7 @@ import Navbar from './Navbar';
 import styles from './homepage.module.css';
 import MovieList from './MovieList';
 import FavouriteMovies from './FavouriteMovies';
+import { buildApiUrl, fetchMovies } from '../utils/utils'; 
 
 export default function HomePage() {
   const [movieData, setMovieData] = useState([]);
@@ -13,9 +14,6 @@ export default function HomePage() {
   const [favoriteMovies, setFavoriteMovies] = useState([]);
   const [showFavorites, setShowFavorites] = useState(false);
 
-  const API_KEY = 'api_key=1cf50e6248dc270629e802686245c2c8';
-  const BASE_URL = 'https://api.themoviedb.org/3';
-
   // Load favorite movies from local storage on initial render
   useEffect(() => {
     const savedFavorites = localStorage.getItem('favoriteMovies');
@@ -24,35 +22,21 @@ export default function HomePage() {
     }
   }, []);
 
-  const fetchMovies = useCallback(async (url, append = false) => {
-    try {
+  const fetchAndSetMovies = useCallback(
+    async (url, append = false) => {
       setIsLoading(true);
-      const response = await fetch(url);
-      const responseJson = await response.json();
-
-      if (responseJson.results) {
-        setMovieData((prev) => (append ? [...prev, ...responseJson.results] : responseJson.results));
-        setHasMore(responseJson.results.length > 0);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-    } finally {
+      const movies = await fetchMovies(url);
+      setMovieData((prev) => (append ? [...prev, ...movies] : movies));
+      setHasMore(movies.length > 0);
       setIsLoading(false);
-    }
-  }, []);
-
-  const buildApiUrl = (query, page) => {
-    const endpoint = query ? 'search/movie' : 'movie/popular';
-    const queryParam = query ? `&query=${query}` : '';
-    return `${BASE_URL}/${endpoint}?${API_KEY}&page=${page}${queryParam}`;
-  };
+    },
+    []
+  );
 
   useEffect(() => {
     setPage(1);
     const url = buildApiUrl(searchValue, 1);
-    fetchMovies(url);
+    fetchAndSetMovies(url);
 
     // Reset to movies list if we're currently viewing favorites
     setShowFavorites(false);
@@ -61,14 +45,14 @@ export default function HomePage() {
       top: 0,
       behavior: 'smooth',
     });
-  }, [searchValue, fetchMovies]);
+  }, [searchValue, fetchAndSetMovies]);
 
   useEffect(() => {
     if (page > 1) {
       const url = buildApiUrl(searchValue, page);
-      fetchMovies(url, true);
+      fetchAndSetMovies(url, true);
     }
-  }, [page, searchValue, fetchMovies]);
+  }, [page, searchValue, fetchAndSetMovies]);
 
   const handleScroll = useCallback(() => {
     if (
@@ -91,12 +75,10 @@ export default function HomePage() {
   const handleFavoriteClick = (movie) => {
     setFavoriteMovies((prev) => {
       const isFavorite = prev.some((fav) => fav.id === movie.id);
-      let updatedFavorites;
-      if (isFavorite) {
-        updatedFavorites = prev.filter((fav) => fav.id !== movie.id);
-      } else {
-        updatedFavorites = [...prev, movie];
-      }
+      const updatedFavorites = isFavorite
+        ? prev.filter((fav) => fav.id !== movie.id)
+        : [...prev, movie];
+
       // Save updated favorites to local storage
       localStorage.setItem('favoriteMovies', JSON.stringify(updatedFavorites));
       return updatedFavorites;

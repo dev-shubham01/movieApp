@@ -1,16 +1,27 @@
 
-const fetchMovies = async () => {
-    const apiUrl = 'https://api.themoviedb.org/3/movie/popular?api_key=4e44d9029b1270a757cddc766a1bcb63&language=en-US';
-    try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        return data;
-    }
-    catch (error) {
-        console.log(error);
-        return;
-    }
 
-}
+const API_KEY = 'api_key=1cf50e6248dc270629e802686245c2c8';
+const BASE_URL = 'https://api.themoviedb.org/3';
 
-export { fetchMovies };
+// Build API URL based on query and page
+export const buildApiUrl = (query, page) => {
+  const endpoint = query ? 'search/movie' : 'movie/popular';
+  const queryParam = query ? `&query=${query}` : '';
+  return `${BASE_URL}/${endpoint}?${API_KEY}&page=${page}${queryParam}`;
+};
+
+
+export const fetchMovies = async (url) => {
+  try {
+    const response = await fetch(url);
+    const responseJson = await response.json();
+    return responseJson.results || [];
+  } catch (error) {
+    console.error('Error fetching movies:', error);
+    return [];
+  }
+};
+
+
+
+
